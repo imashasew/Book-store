@@ -1,0 +1,50 @@
+[
+    {
+        "title": "Harry poter part 4",
+        "image":"images/image1.jpg",
+        "author": "John deo",
+        "price": 2490
+    },
+    {
+        "title": "Kasthuri Suwada",
+        "image":"images/image 2.jpg",
+        "author": "Liversack",
+        "price": 2490
+    },
+    {
+        "title": "Madolduwa",
+        "image":"images/image 3.jpg",
+        "author": "Martin Wickramasinghe",
+         "price": 2490
+    },
+    {
+        "title": "Silo-Wool",
+        "image":"images/image 4.jpg",
+        "author": "Louise Griffin",
+         "price": 2490
+    },
+    {
+        "title": "Silo-Dust",
+        "image":"images/image 5.jpg",
+        "author": "Louise Griffin",
+        "price": 2490
+    },
+    {
+        "title": "Silo-Shift",
+        "image":"images/image 6.jpg",
+        "author": "Louise Griffin",
+         "price": 2490
+    },
+    {
+        "title": "Apegama",
+        "image":"images/image 7.jpg",
+        "author": "Martin Wickramasinghe",
+        "price": 2490
+    },
+    {
+        "title": "Apegama",
+        "image":"images/image 8.jpg",
+        "author": "Martin Wickramasinghe",
+        "price": 2490
+    }
+]
