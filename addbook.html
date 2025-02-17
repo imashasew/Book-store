@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library System</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: url('images/back2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif; 
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin: 10px;
+        }
+
+        .flip-card {
+            width: 200px;
+            height: 300px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flip-card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+        }
+
+        .flip-card-front {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-card-back {
+            background-color: #f7f7f7;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .flip-card img {
+            width: 200px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .flip-card-back strong {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .flip-card-back p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .search-bar {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            background: #28a745;
+            margin-bottom: 20px;
+            width: 150px;
+        }
+
+        .back-button:hover {
+            background: #23b67d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Books</h2>
+        <button class="back-button" onclick="goHome()">Back to Home</button>
+
+        <input type="text" id="bookName" placeholder="Book Name">
+        <input type="text" id="author" placeholder="Author">
+        <input type="text" id="price" placeholder="Price">
+        <input type="file" id="bookImage">
+        <button onclick="addBook()">Add Book</button>
+        <input type="text" id="searchBar" class="search-bar" placeholder="Search books..." onkeyup="searchBooks()">
+        <div class="book-list" id="bookList"></div>
+    </div>
+
+    <script>
+        function goHome() {
+            // Redirect to the home page (update the URL to match your homepage)
+            window.location.href = 'index.html';  // Replace 'index.html' with the correct URL of your homepage
+        }
+
+        // Initialize the books array with some existing books (JSON format)
+        let books = [
+            {
+                name: "Kasthuri Suwada",
+                author: "Liversack",
+                price: "Rs.2490",
+                image: "images/image 2.jpg",  // Corrected image path
+            },
+            {
+                name: "Harry Potter Part 4",  // Corrected title to 'name'
+                author: "John Deo",
+                price: "Rs.2490",
+                image: "images/image1.jpg",
+            },
+            {
+                name: "Madolduwa",  // Corrected title to 'name'
+                author: "Martin Wickramasinghe",
+                price: "Rs.2490",
+                image: "images/image 3.jpg",  // Corrected image path
+            }
+        ];
+
+        // Display the books when the page loads
+        window.onload = function() {
+            displayBooks();
+        };
+
+        // Function to add a new book
+        function addBook() {
+            let bookName = document.getElementById('bookName').value;
+            let author = document.getElementById('author').value;
+            let price = document.getElementById('price').value;  // Corrected variable name
+            let bookImage = document.getElementById('bookImage').files[0];
+
+            if (!bookName || !author || !price || !bookImage) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                // Create a book object
+                let book = {
+                    name: bookName,
+                    author: author,
+                    price: price,
+                    image: event.target.result
+                };
+
+                // Add the book to the JSON array
+                books.push(book);
+
+                // Display the updated book list
+                displayBooks();
+            };
+            reader.readAsDataURL(bookImage);
+        }
+
+        // Function to display the books using flip cards
+        function displayBooks() {
+            let bookList = document.getElementById('bookList');
+            bookList.innerHTML = "";  // Clear the existing books
+
+            // Loop through the books array and create cards
+            books.forEach(book => {
+                let cardContainer = document.createElement('div');
+                cardContainer.classList.add('card-container');
+
+                cardContainer.innerHTML = `
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="${book.image}" alt="Book Image">
+                                <strong>${book.name}</strong>
+                                <strong>${book.price}</strong>
+                            </div>
+                            <div class="flip-card-back">
+                                <strong>${book.name}</strong>
+                                <p>By: ${book.author}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                bookList.appendChild(cardContainer);
+            });
+        }
+
+        // Function to search books based on name or author
+        function searchBooks() {
+            let searchValue = document.getElementById('searchBar').value.toLowerCase();
+            let filteredBooks = books.filter(book => book.name.toLowerCase().includes(searchValue) || book.author.toLowerCase().includes(searchValue));
+            let bookList = document.getElementById('bookList');
+            bookList.innerHTML = "";
+
+            // Loop through the filtered books and display them
+            filteredBooks.forEach(book => {
+                let cardContainer = document.createElement('div');
+                cardContainer.classList.add('card-container');
+                cardContainer.innerHTML = `
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img src="${book.image}" alt="Book Image">
+                                <strong>${book.name}</strong>
+                            </div>
+                            <div class="flip-card-back">
+                                <strong>${book.name}</strong>
+                                <p>By: ${book.author}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                bookList.appendChild(cardContainer);
+            });
+        }
+    </script>
+</body>
+</html>
